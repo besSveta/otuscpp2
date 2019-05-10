@@ -14,7 +14,7 @@ set_target_properties(ip_filter library test_ip_filter PROPERTIES
 	COMPILE_OPTIONS "-Wpedantic;-Wall;-Wextra"
 )
 
-set_target_properties(test_build PROPERTIES
+set_target_properties(test_ip_filter PROPERTIES
     COMPILE_DEFINITIONS BOOST_TEST_DYN_LINK
     INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR}
 )
@@ -26,7 +26,7 @@ target_link_libraries(ip_filter
 
 target_link_libraries(test_ip_filter	
 	${Boost_LIBRARIES}
-	ip_filter
+	library
 )
 	
 install(TARGETS ip_filter RUNTIME DESTINATION bin)
