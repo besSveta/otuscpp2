@@ -1,6 +1,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -8,47 +9,51 @@
 #include <map>
 #include "ip_filter_lib.h"
 
-std::map<std::string, std::vector<size_t>> SortAndGetFilterIndexes(
-		std::vector<std::tuple<int, int, int, int>> &ip_pool) {
+struct FilterIndexesArrays{
+	std::vector<size_t> Indexes1xxx;
+	std::vector<size_t> Indexes46_70xx;
+	std::vector<size_t> Indexes46;
+};
 
-	std::sort(ip_pool.rbegin(), ip_pool.rend());
-	std::map<std::string, std::vector<size_t>> Indexes;
+FilterIndexesArrays SortAndGetFilterIndexes(
+		IPVector &ip_pool) {
+
+	FilterIndexesArrays Indexes;
+	std::sort(ip_pool.begin(), ip_pool.end(), std::greater<std::vector<int>>());
 	for (size_t j = 0; j < ip_pool.size(); j++) {
 		auto ip_part = ip_pool[j];
-		std::vector<int> t = { std::get<0>(ip_part), std::get<1>(ip_part),
-				std::get<2>(ip_part), std::get<3>(ip_part) };
-		Print_Ip(t);
+		Print_Ip(ip_part);
 
-		if (Filter(t, 0, 1)) {
-			Indexes["1.x.x.x"].push_back(j);
+		if (Filter(ip_part, 0, 1)) {
+			Indexes.Indexes1xxx.push_back(j);
 		} else {
-		if (Filter(t, 0, 46, 70)) {
-			Indexes["46.70.x.x"].push_back(j);
+		if (Filter(ip_part, 0, 46, 70)) {
+			Indexes.Indexes46_70xx.push_back(j);
 		}
 	}
-	if (FilterAny(t, 46)) {
-		Indexes["46|46|46|46"].push_back(j);
+	if (FilterAny(ip_part, 46)) {
+		Indexes.Indexes46.push_back(j);
 	}
 
 }
 return Indexes;
 }
 
-void PrintFilters(std::vector<std::tuple<int, int, int, int>> &ip_pool) {
+void PrintFilters(IPVector &ip_pool) {
 auto Indexes = SortAndGetFilterIndexes(ip_pool);
-if (Indexes.find("1.x.x.x") != Indexes.end()) {
-	for (auto t : Indexes["1.x.x.x"]) {
+if (Indexes.Indexes1xxx.begin() != Indexes.Indexes1xxx.end()) {
+	for (auto t : Indexes.Indexes1xxx) {
 		Print_Ip(ip_pool[t]);
 	}
 }
-if (Indexes.find("46.70.x.x") != Indexes.end()) {
-	for (auto t : Indexes["46.70.x.x"]) {
+if (Indexes.Indexes46_70xx.begin() != Indexes.Indexes46_70xx.end()) {
+	for (auto t : Indexes.Indexes46_70xx) {
 		Print_Ip(ip_pool[t]);
 	}
 }
 
-if (Indexes.find("46|46|46|46") != Indexes.end()) {
-	for (auto t : Indexes["46|46|46|46"]) {
+if (Indexes.Indexes46.begin() != Indexes.Indexes46.end()) {
+	for (auto t :  Indexes.Indexes46) {
 		Print_Ip(ip_pool[t]);
 	}
 }
@@ -56,15 +61,16 @@ if (Indexes.find("46|46|46|46") != Indexes.end()) {
 
 int main(int argc, char const *argv[]) {
 try {
-	std::vector<std::tuple<int, int, int, int>> ip_pool;
+	IPVector ip_pool;
 
 	std::vector<int> res;
-	for (std::string line; std::getline(std::cin, line);) {
+	std::ifstream ifs ("ip_filter.tsv");
+	for (std::string line; std::getline(ifs, line);) {
 		if (line.length() == 0)
 			break;
 		auto v = split(line, '\t');
 		if (MakeInts(split(v.at(0), '.'), res)) {
-			ip_pool.push_back(std::make_tuple(res[0], res[1], res[2], res[3]));
+			ip_pool.push_back(res);
 		}
 	}
 	PrintFilters(ip_pool);

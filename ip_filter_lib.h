@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <tuple>
 
+using IPVector=std::vector<std::vector<int>>;
+
 std::vector<std::string> split(const std::string &str, char d);
 
 // Получение из вектора строк, если это возможно, вектора чисел.
@@ -20,17 +22,13 @@ bool MakeInts(const std::vector<std::string> &&values, std::vector<int> &result)
 
 // Печать вектора, содержащего части ip адреса.
 void Print_Ip(const std::vector<int> &t);
-
-// Печать кортежа, содержащего части ip адреса.
-void Print_Ip(const std::tuple<int, int, int, int> &ip_part);
-
-
 // Фильтры.Параметры представляют собой индекс в векторе и значение.
 template<typename T>
 bool Filter(const std::vector<T> &values, size_t indx, T filter) {
 	if (indx > values.size()) {
 		throw "Invalid index";
 	}
+
 	return (values[indx] == filter);
 }
 
@@ -56,23 +54,9 @@ bool Filter(const std::vector<T> &values, size_t indx, T filter,
 		return Filter(values, indx, filter);
 	return Filter(values, indx, filter) && Filter(values, indx + 1, filters...);
 }
-// Фильтрация списка адресов.
-/*template<typename T, typename ... Args>
-void FilterIps_All(const std::vector<std::tuple<T, T, T, T>> &ip_pool, T filter,
-		Args ... filters) {
-	for (size_t j = 0; j < ip_pool.size(); j++) {
-		auto ip_part = ip_pool[j];
-		std::vector<T> t = { std::get<0>(ip_part), std::get<1>(ip_part),
-				std::get<2>(ip_part), std::get<3>(ip_part) };
 
-		if (Filter(t, 0, filter, filters ...)) {
-			Print_Ip(t);
-		}
-	}
-
-}*/
 bool FilterAny(const std::vector<int> &values, int filter) ;
 
-void SortIps(std::vector<std::tuple<int, int, int, int>> &ip_pool);
+void SortIps(IPVector &ip_pool);
 
-void PrintSortedIps(std::vector<std::tuple<int, int, int, int>> &ip_pool);
+void PrintSortedIps(IPVector &ip_pool);

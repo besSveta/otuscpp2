@@ -79,14 +79,6 @@ void Print_Ip(const std::vector<int> &t) {
 	std::cout << std::endl;
 }
 
-// Печать кортежа, содержащего части ip адреса.
-void Print_Ip(const std::tuple<int, int, int, int> &ip_part) {
-	std::vector<int> t = { std::get<0>(ip_part), std::get<1>(ip_part), std::get<
-			2>(ip_part), std::get<3>(ip_part) };
-	Print_Ip(t);
-}
-
-
 bool FilterAny(const std::vector<int> &values, int filter) {
 	for (auto val : values) {
 		if (val == filter) {
@@ -97,23 +89,21 @@ bool FilterAny(const std::vector<int> &values, int filter) {
 }
 
 // Хотя бы одна часть адреса равна данному числу.
-void FilterIps_Any(const std::vector<std::tuple<int, int, int, int>> &ip_pool,
+void FilterIps_Any(const IPVector&ip_pool,
 		int filter) {
 	for (size_t j = 0; j < ip_pool.size(); j++) {
 		auto ip_part = ip_pool[j];
-		std::vector<int> t = { std::get<0>(ip_part), std::get<1>(ip_part),
-				std::get<2>(ip_part), std::get<3>(ip_part) };
-		if (FilterAny(t, filter))
-			Print_Ip(t);
+		if (FilterAny(ip_part, filter))
+			Print_Ip(ip_part);
 	}
 
 }
-void SortIps(std::vector<std::tuple<int, int, int, int>> &ip_pool){
-	std::sort(ip_pool.rbegin(), ip_pool.rend());
+void SortIps(IPVector&ip_pool){
+	std::sort(ip_pool.rbegin(), ip_pool.rend(),std::greater<std::vector<int>>());
 }
 
 // Сотрировка и вывод адресов.
-void PrintSortedIps(std::vector<std::tuple<int, int, int, int>> &ip_pool) {
+void PrintSortedIps(IPVector&ip_pool) {
 
 	SortIps(ip_pool);
 	for (size_t j = 0; j < ip_pool.size(); j++) {
