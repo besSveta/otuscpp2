@@ -99,7 +99,7 @@ void FilterIps_Any(const IPVector&ip_pool,
 
 }
 void SortIps(IPVector&ip_pool){
-	std::sort(ip_pool.rbegin(), ip_pool.rend(),std::greater<std::vector<int>>());
+	std::sort(ip_pool.begin(), ip_pool.end(),std::greater<std::vector<int>>());
 }
 
 // Сотрировка и вывод адресов.
