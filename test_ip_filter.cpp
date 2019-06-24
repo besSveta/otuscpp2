@@ -48,17 +48,17 @@ BOOST_AUTO_TEST_CASE(ip_filter_Sort_test_case)
 
 	std::vector<std::tuple<int, int, int, int>> ip_pool;
 	MakeInts(split("1.1.1.1", '.'), res);
-	ip_pool.push_back(std::make_tuple(res[0], res[1], res[2], res[3]));
+	ip_pool.push_back(res);
 	MakeInts(split("1.2.1.1", '.'), res);
-	ip_pool.push_back(std::make_tuple(res[0], res[1], res[2], res[3]));
+	ip_pool.push_back(res);
 	MakeInts(split("1.10.1.1", '.'), res);
-	ip_pool.push_back(std::make_tuple(res[0], res[1], res[2], res[3]));
+	ip_pool.push_back(res);
 
 	SortIps(ip_pool);
 	//PrintSortedIps(ip_pool);
-	BOOST_REQUIRE_EQUAL(std::get<1>(ip_pool[0]),10);
-	BOOST_REQUIRE_EQUAL(std::get<1>(ip_pool[1]),2);
-	BOOST_REQUIRE_EQUAL(std::get<1>(ip_pool[2]),1);
+	BOOST_REQUIRE_EQUAL(ip_pool[0][1],10);
+	BOOST_REQUIRE_EQUAL(ip_pool[1][1],2);
+	BOOST_REQUIRE_EQUAL(ip_pool[2][1],1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
