@@ -9,8 +9,8 @@ add_library(library ip_filter_lib.cpp)
 add_executable(test_ip_filter test_ip_filter.cpp)
 
 set_target_properties(ip_filter library test_ip_filter PROPERTIES
-	CXXSTANDARD 17
-	CSS_STANDARD_REQUIRED ON
+	CXX_STANDARD 17
+	CXX_STANDARD_REQUIRED ON
 	COMPILE_OPTIONS "-Wpedantic;-Wall;-Wextra"
 )
 
