@@ -64,10 +64,8 @@ try {
 	IPVector ip_pool;
 
 	std::vector<int> res;
-	std::ifstream ifs ("ip_filter.tsv");
-	for (std::string line; std::getline(ifs, line);) {
-		if (line.length() == 0)
-			break;
+	//std::ifstream ifs ("ip_filter.tsv");
+	for (std::string line; std::getline(std::cin, line);) {
 		auto v = split(line, '\t');
 		if (MakeInts(split(v.at(0), '.'), res)) {
 			ip_pool.push_back(res);
@@ -139,3 +137,4 @@ try {
 
 return 0;
 }
+
